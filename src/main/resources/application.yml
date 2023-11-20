@@ -1,0 +1,10 @@
+server:
+  port: 8888
+  servlet:
+    context-path: /api
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/safe_campus
+    driver-class-name:
+    username: root
+    password: 12345678
