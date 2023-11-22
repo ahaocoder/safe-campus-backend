@@ -11,4 +11,10 @@ public class Result<T> {
     private String msg;
     @ApiModelProperty(value = "响应数据")
     private T data;
+
+    public Result(int code, String msg, T data){
+        this.code = code;
+        this.msg = msg;
+        this.data = data;
+    }
 }

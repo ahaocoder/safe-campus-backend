@@ -3,6 +3,7 @@ package com.safecampusbackend.controller;
 import com.safecampusbackend.model.entity.UserEntity;
 import com.safecampusbackend.service.RegisterService;
 import com.safecampusbackend.util.result.Result;
+import com.safecampusbackend.util.result.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -20,17 +21,11 @@ public class RegisterController {
     @GetMapping("/getUser")
     @ApiOperation(value = "获取用户列表", notes = "获取所有用户信息")
     public Result<UserEntity> getUser() {
-        Result<UserEntity> result = new Result<>();
         UserEntity entity = registerService.getUser();
         if (entity != null) {
-            result.setCode(200);
-            result.setMsg("查询成功");
-            result.setData(entity);
-            return result;
+            return ResultUtil.success(entity);
         } else {
-            result.setCode(404);
-            result.setMsg("查询失败");
-            return result;
+            return ResultUtil.error(404, "查询失败");
         }
     }
 }
