@@ -31,5 +31,6 @@ public class RegisterForm {
     private String email;
 
     @ApiModelProperty(value = "手机号")
+    @Pattern(regexp = "^1[3456789]\\d{9}$", message = "输入正确的手机号格式")
     private String phone;
 }
