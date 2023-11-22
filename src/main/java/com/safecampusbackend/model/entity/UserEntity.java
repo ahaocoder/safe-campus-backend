@@ -48,7 +48,7 @@ public class UserEntity {
 
     @TableField("phone")
     @ApiModelProperty(value = "手机号")
-    private Integer phone;
+    private String phone;
 
     @TableField("update_user")
     @ApiModelProperty(value = "更新者")

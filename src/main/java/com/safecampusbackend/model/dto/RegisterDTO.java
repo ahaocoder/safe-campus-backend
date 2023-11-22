@@ -22,7 +22,7 @@ public class RegisterDTO {
     private String email;
 
     @ApiModelProperty(value = "手机号")
-    private Integer phone;
+    private String phone;
 
     /**
      * 入参转换为 DTO
