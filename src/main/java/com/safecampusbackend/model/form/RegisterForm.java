@@ -1,5 +1,6 @@
 package com.safecampusbackend.model.form;
 
+import com.safecampusbackend.model.entity.CodeEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -33,4 +34,8 @@ public class RegisterForm {
     @ApiModelProperty(value = "手机号")
     @Pattern(regexp = "^1[3456789]\\d{9}$", message = "输入正确的手机号格式")
     private String phone;
+
+    @ApiModelProperty(value = "验证码类")
+    @NotNull(message = "验证码不得为空")
+    private CodeEntity codeEntity;
 }
