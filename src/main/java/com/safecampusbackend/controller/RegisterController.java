@@ -25,10 +25,18 @@ public class RegisterController {
 
     @PostMapping("/register")
     @ApiOperation(value = "用户注册", notes = "用户注册接口")
-    public Result<String> test(@RequestBody @Validated RegisterForm form) {
-        RegisterDTO dto = new RegisterDTO();
-        dto.toDTO(form);
-        if (registerService.register(dto)) {
+    public Result<String> register(@RequestBody @Validated RegisterForm form) {
+        CodeEntity codeEntity = form.getCodeEntity();
+        if (!registerService.isCodeValid(codeEntity)){
+            return ResultUtil.error(400, "验证码不正确");
+        }
+
+        // 检查用户名是否重复
+        if (registerService.isUsernameDuplicate(form.getUsername())) {
+            return ResultUtil.error(400, "用户名已存在");
+        }
+
+        if (registerService.register(RegisterDTO.toDTO(form))) {
             return ResultUtil.success("注册成功！");
         } else {
             return ResultUtil.error(404, "注册失败");
