@@ -1,12 +1,15 @@
 package com.safecampusbackend.service.impl;
 
 import cn.hutool.extra.mail.MailUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.safecampusbackend.model.dto.RegisterDTO;
 import com.safecampusbackend.model.entity.CodeEntity;
 import com.safecampusbackend.model.entity.UserEntity;
 import com.safecampusbackend.model.mapper.UserMapper;
 import com.safecampusbackend.service.RegisterService;
+import com.safecampusbackend.util.SaltUtil;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
@@ -25,6 +28,24 @@ public class RegisterServiceImpl implements RegisterService {
 
     // 注册实现
     public Boolean register(RegisterDTO dto) {
+        UserEntity userEntity = new UserEntity();
+        BeanUtils.copyProperties(dto, userEntity);
+
+        //产盐
+        String salt = SaltUtil.generateSalt();
+        userEntity.setSalt(salt);
+        // 加盐
+        String password = SaltUtil.generateAddSalt(userEntity.getPassword(), salt);
+        userEntity.setPassword(password);
+
+        // 账号状态默认开启
+        userEntity.setStatus(1);
+
+        try {
+            userMapper.insert(userEntity);
+        } catch (Exception e) {
+            return false;
+        }
         return true;
     }
 
@@ -57,5 +78,31 @@ public class RegisterServiceImpl implements RegisterService {
         SecureRandom random = new SecureRandom();
         int randomNumber = random.nextInt(1000000);  // 生成 [0, 999999] 范围内的随机数
         return String.format("%06d", randomNumber);  // 通过格式化确保输出的数字总是 6 位
+    }
+
+    // 验证码验证实现
+    public Boolean isCodeValid(CodeEntity codeEntity) {
+        // 从 Redis 中获取存储的验证码
+        String storedCode = getCodeFromRedis(codeEntity.getUuid());
+
+        // 验证验证码是否正确
+        return storedCode != null && storedCode.equals(codeEntity.getCode());
+    }
+
+    // 从 redis 中取验证码
+    private String getCodeFromRedis(String uuid) {
+        // 构造 Redis 中存储验证码的 key
+        String key = "verification_code:" + uuid;
+
+        // 从 Redis 中获取验证码
+        return redisTemplate.opsForValue().get(key);
+    }
+
+    // 检验用户名是否重复实现
+    public Boolean isUsernameDuplicate(String username) {
+        QueryWrapper<UserEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username", username);
+        UserEntity userEntity = userMapper.selectOne(queryWrapper);
+        return userEntity != null;
     }
 }

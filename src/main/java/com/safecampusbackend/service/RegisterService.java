@@ -20,4 +20,20 @@ public interface RegisterService {
      * @return code，uuid 验证码，唯一标识符
      */
     CodeEntity sendCodeToMail(String mailAddress);
+
+    /**
+     * 验证码校验
+     *
+     * @param codeEntity 验证码类对象
+     * @return true or false
+     */
+    Boolean isCodeValid(CodeEntity codeEntity);
+
+    /**
+     * 检验用户名是否重复
+     *
+     * @param username 注册用户名
+     * @return true or false
+     */
+    Boolean isUsernameDuplicate(String username);
 }
