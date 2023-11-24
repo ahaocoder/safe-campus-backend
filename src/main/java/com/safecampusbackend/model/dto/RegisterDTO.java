@@ -30,14 +30,14 @@ public class RegisterDTO {
      * @param form 前端入参的 RegisterForm
      * @return RegisterDTO 数据传输对象
      */
-    public RegisterDTO toDTO(RegisterForm form){
+    public static RegisterDTO toDTO(RegisterForm form){
         RegisterDTO dto = new RegisterDTO();
-        dto.username = form.getUsername();
-        dto.password = form.getPassword();
-        dto.realName = form.getRealName();
-        dto.gender = form.getGender();
-        dto.email = form.getEmail();
-        dto.phone = form.getPhone();
+        dto.setUsername(form.getUsername());
+        dto.setPassword(form.getPassword());
+        dto.setRealName(form.getRealName());
+        dto.setGender(form.getGender());
+        dto.setEmail(form.getEmail());
+        dto.setPhone(form.getPhone());
         return dto;
     }
 }
